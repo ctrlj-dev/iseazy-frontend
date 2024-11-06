@@ -1,0 +1,33 @@
+@use '@lib/styles/variables' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  
+  button {
+    margin-top: 79px;
+  }
+}
+
+.brand__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+  box-shadow: 0px 3px 6px #00000033;
+  border-radius: 100%;
+  background: $gray 0% 0% no-repeat padding-box;
+  width: 130px;
+  height: 130px;
+}

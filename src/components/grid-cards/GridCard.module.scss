@@ -1,0 +1,61 @@
+@use '@lib/styles/variables' as *;
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  padding: 30px 0;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.clock {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  border: 2px solid $gray-400;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+
+  &::before,
+  &::after {
+    position: absolute;
+    transform-origin: bottom;
+    border-radius: 6px;
+    background-color: $gray-400;
+    width: 2px;
+    content: '';
+  }
+
+  &::before {
+    top: 3px;
+    transform: rotate(0deg);
+    height: 12px;
+  }
+
+  &::after {
+    bottom: 12px;
+    transform: rotate(120deg);
+    height: 8px;
+    content: '';
+  }
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+
+  @media (min-width: 768px) {
+    margin-top: 0;
+  }
+}
