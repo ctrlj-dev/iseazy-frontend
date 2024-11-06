@@ -1,0 +1,47 @@
+@use '@lib/styles/variables' as *;
+
+.spinner {
+  position: relative;
+  animation: bubble 2s linear infinite;
+  margin: 0 auto;
+  width: 45px;
+  height: 45px;
+}
+
+.bubble__1,
+.bubble__2 {
+  position: absolute;
+  top: 0;
+  top: auto;
+  bottom: 0;
+  animation: bounce 2s ease-in-out infinite;
+  border-radius: 100%;
+  background-color: $primary;
+  width: 25px;
+  height: 25px;
+}
+
+.bubble__2 {
+  top: auto;
+  bottom: 0;
+}
+
+.bubble__2 {
+  animation-delay: -1s;
+}
+
+@keyframes bubble {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}

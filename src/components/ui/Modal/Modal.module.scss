@@ -1,0 +1,46 @@
+@use '@lib/styles/variables' as *;
+
+.modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  background: $overlay;
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+  border-radius: 20px;
+  background: $white 0% 0% no-repeat padding-box;
+  padding: 20px;
+  width: 500px;
+  height: 240px;
+
+  @media (min-width: 768px) {
+    padding: 30px 50px;
+  }
+}
+
+.children {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 30px;
+  }
+}

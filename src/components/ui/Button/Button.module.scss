@@ -1,0 +1,23 @@
+@use '@lib/styles/variables' as *;
+
+.button {
+  cursor: pointer;
+  border: none;
+  border-radius: 35px;
+  background-color: $primary;
+  padding: 15px 50px;
+  color: $white;
+  font-weight: bold;
+  font-size: 19px;
+  text-align: center;
+
+  @media (min-width: 768px) {
+    padding: 20px 60px;
+    font-size: 26px;
+  }
+
+  &:hover {
+    transition: background-color 300ms ease-in-out;
+    background-color: $primary-900;
+  }
+}
