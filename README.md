@@ -1,8 +1,8 @@
 # Prueba técnica
 
 El objetivo de esta prueba es conocer un poco mejor cómo trabajas, las buenas prácticas que sigues y tu atención por el
-detalle. Valoraremos la sencillez, facilidad para entender el código y la robustez. 
-Aspectos que nos facilitan aseguar la calidad, revisar, modificar y mantener el código.  
+detalle. Valoraremos la sencillez, facilidad para entender el código y la robustez.
+Aspectos que nos facilitan aseguar la calidad, revisar, modificar y mantener el código.
 
 Para realizar el ejercicio te proporcionaremos un proyecto vacío creado con CRA y un diseño realizado con Adobe XD para
 que puedas obtener los materiales necesarios de forma cómoda:
@@ -15,7 +15,6 @@ día :)
 
 Te sugerimos que empieces implementando la mecánica básica del ejercicio y posteriormente añadas los detalles y mejoras
 que consideres, de esta manera tendrás algo revisable aunque se te acabe el tiempo.
- 
 
 ## Descripción del ejercicio
 
@@ -24,14 +23,14 @@ Se trata de implementar un juego clásico; el memory. La mecánica es bastante s
 Al empezar la partida tienes una parrilla de tarjetas vistas del reverso. Las tarjetas contienen una serie de parejas de
 imágenes que se colocan de forma aleatoria en cada tirada. Puedes descubrir dos tarjetas a la vez:
 
-* Si las tarjetas son iguales se quedan descubiertas.
-* Si las tarjetas son distintas se vuelven a poner del reverso para
-que sigas buscando parejas. 
-* El juego termina cuando hayas revelado todas las parejas.
+- Si las tarjetas son iguales se quedan descubiertas.
+- Si las tarjetas son distintas se vuelven a poner del reverso para
+  que sigas buscando parejas.
+- El juego termina cuando hayas revelado todas las parejas.
 
 ## Pasos para preparar el entorno para realizar la prueba
 
-1) Es necesario tener instalado node >= 10 y yarn.
-2) Clonas este repo
-3) Ejecutas "yarn" en la carpeta del proyecto
-4) Ejecutas "yarn start" para comenzar a desarrollar en http://localhost:3000
+1. Es necesario tener instalado node >= 10 y yarn.
+2. Clonas este repo
+3. Ejecutas "yarn" en la carpeta del proyecto
+4. Ejecutas "yarn start" para comenzar a desarrollar en http://localhost:3000
