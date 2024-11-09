@@ -3,10 +3,11 @@ import { Modal } from '@components/ui/Modal';
 import { Typography } from '@components/ui/Typography';
 import TEXT_CONSTANTS from '@lib/constants/text';
 import { useGame } from '@lib/hooks/useGame';
+import { Game } from '@lib/utils/card';
 import { formatTime } from '@lib/utils/time';
 import mockCards from '@public/mocks/cards';
 import { FC } from 'react';
-import styles from './GridCard.module.scss';
+import styles from './GridCards.module.scss';
 
 const GridCards: FC = () => {
   const { state, handleFlipCard, handleResetGame } = useGame(mockCards);
@@ -18,21 +19,24 @@ const GridCards: FC = () => {
   return (
     <div className={styles.container}>
       {state.cards.map((card, index) => {
-        const isFlipped = state?.selectedCards?.includes(card) || card.flipped;
+        const isFlipped =
+          state.selectedCards.some(selectedCard => selectedCard === card.id) ||
+          card.flipped;
         const card_ = isFlipped ? { ...card, flipped: true } : card;
         return (
           <Card
             index={index}
-            key={card_.id}
+            key={card.id}
             card={card_}
-            onClick={() => handleFlipCard(card_)}
+            onClick={() => {
+              handleFlipCard(card.id);
+            }}
           />
         );
       })}
       <Modal
-        onButtonClick={closeModal}
         buttonLabel={TEXT_CONSTANTS.BUTTONS.RESET}
-        isOpen={state.isGameOver}
+        isOpen={state.game === Game.FINISHED}
         onClose={closeModal}
       >
         <Typography tag="p">Completado</Typography>

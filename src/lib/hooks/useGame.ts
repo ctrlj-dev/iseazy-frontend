@@ -1,96 +1,102 @@
 import { CardInterface } from '@lib/interfaces/card.interface';
 import {
+  CardId,
+  disableCardFlip,
   flipMatchingCards,
+  Game,
+  GameState,
+  getSelectedPairIds,
   isAllCardsFlipped,
   resetFlippedCards,
+  resetSelectedCards,
+  SelectedCards,
   shuffleCards,
 } from '@lib/utils/card';
-import { useReducer, useRef } from 'react';
+import { useEffect, useReducer } from 'react';
 
-export type GameState = {
-  cards: CardInterface[];
-  selectedCards: CardInterface[];
-  isGameOver: boolean;
-  startTime: number;
-  endTime: number;
-};
+type Action =
+  | { type: 'FLIP_CARD'; cardId: CardId }
+  | { type: 'MATCHING' }
+  | { type: 'RESET_GAME' };
 
 const InitialState: GameState = {
   cards: [],
   selectedCards: [],
-  isGameOver: false,
-  startTime: 0,
+  game: Game.PLAYING,
+  startTime: Date.now(),
   endTime: 0,
 };
-
-type Action =
-  | { type: 'FLIP_CARD'; payload: CardInterface }
-  | { type: 'RESET_FLIPPED' }
-  | { type: 'START_GAME' }
-  | { type: 'END_GAME' }
-  | { type: 'RESET_GAME' };
 
 const gameReducer = (state: GameState, action: Action): GameState => {
   switch (action.type) {
     case 'FLIP_CARD': {
-      const updatedSelectedCards = [...state.selectedCards, action.payload];
+      const updatedSelectedCards: SelectedCards = [
+        ...state.selectedCards,
+        action.cardId,
+      ] as SelectedCards;
 
-      if (updatedSelectedCards.length < 2) {
-        return {
-          ...state,
-          selectedCards: updatedSelectedCards,
-        };
+      let gameState: Game;
+      if (updatedSelectedCards.length === 2) {
+        gameState = Game.MATCHING;
+      } else {
+        gameState = state.game;
       }
 
-      const [firstCard, secondCard] = updatedSelectedCards;
-      const isPairMatch = firstCard.pairId === secondCard.pairId;
+      return {
+        ...state,
+        selectedCards: updatedSelectedCards,
+        game: gameState,
+      };
+    }
 
-      if (!isPairMatch) {
-        return {
-          ...state,
-          selectedCards: updatedSelectedCards,
-        };
+    case 'MATCHING': {
+      const [firstPairId, secondPairId] = getSelectedPairIds(
+        state.cards,
+        state.selectedCards
+      );
+
+      if (!firstPairId || !secondPairId) {
+        return state;
       }
-      const updatedCards = flipMatchingCards(state.cards, firstCard);
-      const isGameOver = isAllCardsFlipped(updatedCards);
+
+      const isMatch = firstPairId === secondPairId;
+
+      let updatedCards = state.cards;
+      if (!isMatch) {
+        updatedCards = resetSelectedCards(state.cards, state.selectedCards);
+      } else {
+        updatedCards = flipMatchingCards(state.cards, firstPairId);
+      }
+
+      const isGameOver = isMatch && isAllCardsFlipped(updatedCards);
+
+      let gameState;
+      let endTime = 0;
+      if (isGameOver) {
+        gameState = Game.FINISHED;
+        endTime = Date.now();
+      } else {
+        gameState = Game.PLAYING;
+      }
 
       return {
         ...state,
         selectedCards: [],
         cards: updatedCards,
-        ...(isGameOver && { isGameOver, endTime: Date.now() }),
+        game: gameState,
+        endTime,
       };
     }
-
-    case 'RESET_FLIPPED':
-      return {
-        ...state,
-        selectedCards: [],
-        cards: resetFlippedCards(state.cards, state.selectedCards),
-      };
-
-    case 'START_GAME':
-      return {
-        ...state,
-        startTime: Date.now(),
-      };
 
     case 'RESET_GAME': {
       const initialCards = resetFlippedCards(state.cards);
       return {
         ...InitialState,
+        game: Game.PLAYING,
+        startTime: Date.now(),
         cards: shuffleCards(initialCards),
-        startTime: 0,
-        endTime: 0,
-        isGameOver: false,
       };
     }
-
-    case 'END_GAME':
-      return {
-        ...state,
-        startTime: 0,
-      };
 
     default:
       return state;
@@ -103,40 +109,28 @@ const useGame = (initialCards: CardInterface[]) => {
     cards: shuffleCards(initialCards),
   });
 
-  const isFlippingRef = useRef(false);
-
-  const handleFlipCard = (card: CardInterface) => {
-    // Prevent flipping if the card is already flipped
-    if (state.selectedCards.includes(card) || isFlippingRef.current) {
+  const handleFlipCard = (cardId: CardId) => {
+    const { game, selectedCards, cards } = state;
+    const isCardFlipDisabled = disableCardFlip(
+      cardId,
+      game,
+      selectedCards,
+      cards
+    );
+    if (isCardFlipDisabled) {
       return;
     }
-
-    if (state.startTime === 0) {
-      dispatch({ type: 'START_GAME' });
-    }
-
-    dispatch({ type: 'FLIP_CARD', payload: card });
-
-    if (state.selectedCards.length === 1) {
-      const firstSelectedCard = state.selectedCards[0];
-      const isCardMatched = firstSelectedCard.pairId === card.pairId;
-
-      if (!isCardMatched) {
-        isFlippingRef.current = true;
-      }
-
-      setTimeout(() => {
-        if (!isCardMatched) {
-          dispatch({ type: 'RESET_FLIPPED' });
-        }
-        isFlippingRef.current = false;
-
-        if (state.isGameOver) {
-          dispatch({ type: 'END_GAME' });
-        }
-      }, 800);
-    }
+    dispatch({ type: 'FLIP_CARD', cardId });
   };
+
+  useEffect(() => {
+    if (state.game === Game.MATCHING) {
+      const matchingTimeout = setTimeout(() => {
+        dispatch({ type: 'MATCHING' });
+      }, 600);
+      return () => clearTimeout(matchingTimeout);
+    }
+  }, [state.game]);
 
   const handleResetGame = () => {
     dispatch({ type: 'RESET_GAME' });

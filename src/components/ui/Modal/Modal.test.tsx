@@ -3,21 +3,19 @@ import Modal from './Modal';
 
 describe('Modal Component', () => {
   const mockOnClose = jest.fn();
-  const mockOnButtonClick = jest.fn();
   const buttonLabel = 'Confirm';
 
   const renderModal = (isOpen: boolean) => {
     return render(
-      <Modal
-        isOpen={isOpen}
-        onClose={mockOnClose}
-        onButtonClick={mockOnButtonClick}
-        buttonLabel={buttonLabel}
-      >
+      <Modal isOpen={isOpen} onClose={mockOnClose} buttonLabel={buttonLabel}>
         <p>Modal Content</p>
       </Modal>
     );
   };
+
+  beforeEach(() => {
+    mockOnClose.mockClear();
+  });
 
   it('renders correctly when open', () => {
     renderModal(true);
@@ -50,6 +48,6 @@ describe('Modal Component', () => {
     const button = screen.getByRole('button', { name: buttonLabel });
     fireEvent.click(button);
 
-    expect(mockOnButtonClick).toHaveBeenCalledTimes(1);
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 });

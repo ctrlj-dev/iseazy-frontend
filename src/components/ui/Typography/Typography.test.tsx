@@ -7,9 +7,9 @@ describe('Typography Component', () => {
     const { getByText } = render(<Typography>Default Heading</Typography>);
     const headingElement = getByText('Default Heading');
 
-    expect(headingElement.tagName).toBe('H1');
+    expect(headingElement.tagName).toBe('P');
     expect(headingElement).toHaveClass(styles.typography);
-    expect(headingElement).toHaveClass(styles.h1);
+    expect(headingElement).toHaveClass(styles.p);
   });
 
   it('renders with a custom tag', () => {

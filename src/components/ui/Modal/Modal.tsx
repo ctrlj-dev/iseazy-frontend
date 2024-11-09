@@ -7,17 +7,10 @@ type ModalProps = {
   children: React.ReactNode;
   isOpen: boolean;
   buttonLabel: string;
-  onButtonClick: () => void;
   onClose: () => void;
 };
 
-const Modal: FC<ModalProps> = ({
-  children,
-  isOpen,
-  onClose,
-  onButtonClick,
-  buttonLabel,
-}) => {
+const Modal: FC<ModalProps> = ({ children, isOpen, onClose, buttonLabel }) => {
   const modalRef = React.useRef<HTMLDivElement | null>(null);
 
   const handleClose = (e: React.MouseEvent) => {
@@ -40,7 +33,7 @@ const Modal: FC<ModalProps> = ({
     >
       <div className={styles.content}>
         <div className={styles.children}>{children}</div>
-        <Button onClick={onButtonClick}>{buttonLabel}</Button>
+        <Button onClick={onClose}>{buttonLabel}</Button>
       </div>
     </div>,
     document.body

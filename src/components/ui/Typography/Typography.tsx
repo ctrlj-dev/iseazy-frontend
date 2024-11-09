@@ -11,7 +11,7 @@ interface TypographyProps {
 }
 
 const Typography: React.FC<TypographyProps> = ({
-  tag = 'h1',
+  tag = 'p',
   variant = tag,
   children,
   className = '',
