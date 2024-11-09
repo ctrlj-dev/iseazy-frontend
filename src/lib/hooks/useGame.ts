@@ -30,17 +30,26 @@ const InitialState: GameState = {
 const gameReducer = (state: GameState, action: Action): GameState => {
   switch (action.type) {
     case 'FLIP_CARD': {
+      const { game, selectedCards, cards } = state;
+      // Prevent flip cards if already flipped,selected or matching
+      const isCardFlipDisabled = disableCardFlip(
+        action.cardId,
+        game,
+        selectedCards,
+        cards
+      );
+      if (isCardFlipDisabled) {
+        return state;
+      }
       const updatedSelectedCards: SelectedCards = [
         ...state.selectedCards,
         action.cardId,
       ] as SelectedCards;
 
-      let gameState: Game;
+      let gameState = game;
       if (updatedSelectedCards.length === 2) {
         gameState = Game.MATCHING;
-      } else {
-        gameState = state.game;
-      }
+      } 
 
       return {
         ...state,
@@ -50,9 +59,10 @@ const gameReducer = (state: GameState, action: Action): GameState => {
     }
 
     case 'MATCHING': {
+      const { selectedCards, cards } = state;
       const [firstPairId, secondPairId] = getSelectedPairIds(
-        state.cards,
-        state.selectedCards
+        cards,
+        selectedCards
       );
 
       if (!firstPairId || !secondPairId) {
@@ -61,11 +71,11 @@ const gameReducer = (state: GameState, action: Action): GameState => {
 
       const isMatch = firstPairId === secondPairId;
 
-      let updatedCards = state.cards;
+      let updatedCards = cards;
       if (!isMatch) {
-        updatedCards = resetSelectedCards(state.cards, state.selectedCards);
+        updatedCards = resetSelectedCards(cards, selectedCards);
       } else {
-        updatedCards = flipMatchingCards(state.cards, firstPairId);
+        updatedCards = flipMatchingCards(cards, firstPairId);
       }
 
       const isGameOver = isMatch && isAllCardsFlipped(updatedCards);
@@ -110,16 +120,6 @@ const useGame = (initialCards: CardInterface[]) => {
   });
 
   const handleFlipCard = (cardId: CardId) => {
-    const { game, selectedCards, cards } = state;
-    const isCardFlipDisabled = disableCardFlip(
-      cardId,
-      game,
-      selectedCards,
-      cards
-    );
-    if (isCardFlipDisabled) {
-      return;
-    }
     dispatch({ type: 'FLIP_CARD', cardId });
   };
 

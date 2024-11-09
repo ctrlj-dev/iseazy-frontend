@@ -6,8 +6,16 @@ import { useGame } from '@lib/hooks/useGame';
 import { Game } from '@lib/utils/card';
 import { formatTime } from '@lib/utils/time';
 import mockCards from '@public/mocks/cards';
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import styles from './GridCards.module.scss';
+
+const MemoizedCard = memo(Card, (prevProps, nextProps) => {
+  return prevProps.card.flipped === nextProps.card.flipped;
+});
+
+const MemoizedModal = memo(Modal, (prevProps, nextProps) => {
+  return prevProps.isOpen === nextProps.isOpen;
+});
 
 const GridCards: FC = () => {
   const { state, handleFlipCard, handleResetGame } = useGame(mockCards);
@@ -24,17 +32,15 @@ const GridCards: FC = () => {
           card.flipped;
         const card_ = isFlipped ? { ...card, flipped: true } : card;
         return (
-          <Card
+          <MemoizedCard
             index={index}
             key={card.id}
             card={card_}
-            onClick={() => {
-              handleFlipCard(card.id);
-            }}
+            onClick={() => handleFlipCard(card.id)}
           />
         );
       })}
-      <Modal
+      <MemoizedModal
         buttonLabel={TEXT_CONSTANTS.BUTTONS.RESET}
         isOpen={state.game === Game.FINISHED}
         onClose={closeModal}
@@ -46,7 +52,7 @@ const GridCards: FC = () => {
             {formatTime(state.startTime, state.endTime)}
           </Typography>
         </div>
-      </Modal>
+      </MemoizedModal>
     </div>
   );
 };
