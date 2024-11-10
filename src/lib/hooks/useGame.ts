@@ -49,7 +49,7 @@ const gameReducer = (state: GameState, action: Action): GameState => {
       let gameState = game;
       if (updatedSelectedCards.length === 2) {
         gameState = Game.MATCHING;
-      } 
+      }
 
       return {
         ...state,

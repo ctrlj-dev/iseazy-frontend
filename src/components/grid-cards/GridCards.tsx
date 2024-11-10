@@ -45,7 +45,7 @@ const GridCards: FC = () => {
         isOpen={state.game === Game.FINISHED}
         onClose={closeModal}
       >
-        <Typography tag="p">Completado</Typography>
+        <Typography tag="p">{TEXT_CONSTANTS.GAME.COMPLETED}</Typography>
         <div className={styles.timer}>
           <div className={styles.clock}></div>
           <Typography tag="h2">
